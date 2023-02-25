@@ -3,3 +3,6 @@
 /output
 /video.mp4
 ESP32_VidPlayer/data/video.hs
+ESP32_VidPlayer/debug.cfg
+ESP32_VidPlayer/esp32.svd
+ESP32_VidPlayer/debug_custom.json

@@ -7,14 +7,14 @@
 #endif
 
 #if HEATSHRINK_DYNAMIC_ALLOC
-    /* Optional replacement of malloc/free */
-    #define HEATSHRINK_MALLOC(SZ) malloc(SZ)
-    #define HEATSHRINK_FREE(P, SZ) free(P)
+/* Optional replacement of malloc/free */
+#define HEATSHRINK_MALLOC(SZ) malloc(SZ)
+#define HEATSHRINK_FREE(P, SZ) free(P)
 #else
-    /* Required parameters for static configuration */
-    #define HEATSHRINK_STATIC_INPUT_BUFFER_SIZE 32
-    #define HEATSHRINK_STATIC_WINDOW_BITS 4
-    #define HEATSHRINK_STATIC_LOOKAHEAD_BITS 3
+/* Required parameters for static configuration */
+#define HEATSHRINK_STATIC_INPUT_BUFFER_SIZE 2048
+#define HEATSHRINK_STATIC_WINDOW_BITS 11
+#define HEATSHRINK_STATIC_LOOKAHEAD_BITS 4
 #endif
 
 /* Turn on logging for debugging. */
