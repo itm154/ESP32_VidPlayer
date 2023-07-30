@@ -25,11 +25,9 @@ def resize(input, width, height, overwrite=False):
     print("Resizing video...")
     input = ffmpeg.input(input)
     out_video = os.path.join(os.path.dirname("./.temp/"), "temp.mp4")
-    video = (input
-             .filter('scale', width, height)
-             .output(out_video)
-             .overwrite_output()
-             .run())
+    video = (
+        input.filter("scale", width, height).output(out_video).overwrite_output().run()
+    )
     return out_video
 
 
@@ -39,18 +37,17 @@ def convert_frames(video):
     cv2Output = os.path.dirname("./.temp/frames/")
     frameNr = 0
 
-    while (True):
+    while True:
         successful, frame = cv2Capture.read()
         if successful:
-            cv.imwrite(os.path.join(cv2Output, f'frame_{frameNr}.png'), frame)
+            cv.imwrite(os.path.join(cv2Output, f"frame_{frameNr}.png"), frame)
         else:
             break
         frameNr += 1
 
 
 def compress_to_bin(filename):
-    im = Image.open(filename).convert(
-        mode="L").point(lambda i: i > 127 and 255)
+    im = Image.open(filename).convert(mode="L").point(lambda i: i > 127 and 255)
 
     imdata = list(im.getdata())
 
@@ -81,7 +78,7 @@ def compress_to_bin(filename):
             else:
                 # encode directly
                 im_comp.append(c_m1)
-                if c_m1 in [0x55, 0xaa]:
+                if c_m1 in [0x55, 0xAA]:
                     im_comp.append(0)
         else:
             if c_m1 == c:
@@ -94,11 +91,11 @@ def compress_to_bin(filename):
                     if c_m1 == 0:
                         im_comp.append(0x55)
                     else:
-                        im_comp.append(0xaa)
+                        im_comp.append(0xAA)
                     if runlength <= 127:
                         im_comp.append(runlength)
                     else:
-                        im_comp.append((runlength & 0x7f) | 128)
+                        im_comp.append((runlength & 0x7F) | 128)
                         im_comp.append(runlength >> 7)
                 runlength = 0
         c_m1 = c
@@ -113,11 +110,11 @@ def compress_to_bin(filename):
             if c_m1 == 0:
                 im_comp.append(0x55)
             else:
-                im_comp.append(0xaa)
+                im_comp.append(0xAA)
             if runlength <= 127:
                 im_comp.append(runlength)
             else:
-                im_comp.append((runlength & 0x7f) | 128)
+                im_comp.append((runlength & 0x7F) | 128)
                 im_comp.append(runlength >> 7)
         runlength = 0
 
@@ -127,7 +124,7 @@ def compress_to_bin(filename):
     c_to_dup = -1
     for c in im_comp[:]:
         if c_to_dup == -1:
-            if c in [0x55, 0xaa]:
+            if c in [0x55, 0xAA]:
                 c_to_dup = c
             else:
                 im_decomp.append(c)
@@ -143,7 +140,7 @@ def compress_to_bin(filename):
                         im_decomp.extend([255] * c)
                     c_to_dup = -1
                 else:
-                    runlength = c & 0x7f
+                    runlength = c & 0x7F
             else:
                 runlength = runlength | (c << 7)
                 if c_to_dup == 0x55:
@@ -172,8 +169,13 @@ print("Compressing video into a binary...")
 # TODO Make file directory compatible with Windows file system
 output_file = open("./output/video.bin", "wb")
 
-frameNumber = len([entry for entry in os.listdir("./.temp/frames")
-                   if os.path.isfile(os.path.join("./.temp/frames", entry))])
+frameNumber = len(
+    [
+        entry
+        for entry in os.listdir("./.temp/frames")
+        if os.path.isfile(os.path.join("./.temp/frames", entry))
+    ]
+)
 
 for frame in range(1, int(frameNumber)):
     file = "./.temp/frames/frame_{}".format(frame) + ".png"
